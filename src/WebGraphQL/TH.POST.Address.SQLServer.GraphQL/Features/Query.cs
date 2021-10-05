@@ -4,7 +4,7 @@ using System.Linq;
 using TH.POST.Address.Domain.Entities;
 using TH.POST.Address.Persistence.Context;
 
-namespace TH.POST.Address.SQLServer.GraphQL
+namespace TH.POST.Address.SQLServer.GraphQL.Features
 {
     [GraphQLDescription("Represents the queries available.")]
     public class Query

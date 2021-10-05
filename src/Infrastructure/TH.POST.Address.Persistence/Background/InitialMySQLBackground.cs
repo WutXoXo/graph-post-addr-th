@@ -9,11 +9,11 @@ using TH.POST.Address.Persistence.Context;
 
 namespace TH.POST.Address.Persistence.Background
 {
-    public class InitialBackground : IHostedService
+    public class InitialMySQLBackground : IHostedService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<InitialBackground> _logger;
-        public InitialBackground(IServiceProvider serviceProvider, ILogger<InitialBackground> logger)
+        private readonly ILogger<InitialMySQLBackground> _logger;
+        public InitialMySQLBackground(IServiceProvider serviceProvider, ILogger<InitialMySQLBackground> logger)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
@@ -23,7 +23,7 @@ namespace TH.POST.Address.Persistence.Background
         {
             using (var scopeProvider = _serviceProvider.CreateScope())
             {
-                var context = scopeProvider.ServiceProvider.GetRequiredService<AppSQLServerContext>();
+                var context = scopeProvider.ServiceProvider.GetRequiredService<AppMySQLContext>();
                 await context.Database.MigrateAsync();
             }
         }
@@ -32,7 +32,5 @@ namespace TH.POST.Address.Persistence.Background
         {
             return Task.CompletedTask;
         }
-
-
     }
 }

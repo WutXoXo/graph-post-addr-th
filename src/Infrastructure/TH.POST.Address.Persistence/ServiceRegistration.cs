@@ -8571,7 +8571,7 @@ namespace TH.POST.Address.Persistence
 
         public static void AddSQLServerContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppSQLServerContext>(options =>
+            services.AddPooledDbContextFactory<AppSQLServerContext>(options =>
             {
                 options.UseSqlServer(
                  configuration["ConnectionStrings:ApplicationConnection"],
@@ -8611,7 +8611,7 @@ namespace TH.POST.Address.Persistence
 
         public static void AddPersistenceRegistration(this IServiceCollection services)
         {
-            services.AddHostedService<InitialBackground>();
+            
         }
     }
 }

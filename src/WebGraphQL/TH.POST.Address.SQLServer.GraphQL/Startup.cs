@@ -1,14 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TH.POST.Address.Persistence;
+using TH.POST.Address.Persistence.Background;
+using TH.POST.Address.SQLServer.GraphQL.Features;
+using TH.POST.Address.SQLServer.GraphQL.Features.Amphures;
+using TH.POST.Address.SQLServer.GraphQL.Features.Geographies;
+using TH.POST.Address.SQLServer.GraphQL.Features.Provinces;
 
 namespace TH.POST.Address.SQLServer.GraphQL
 {
@@ -25,10 +27,18 @@ namespace TH.POST.Address.SQLServer.GraphQL
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Localization
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            #endregion
+
             services.AddSQLServerContext(Configuration);
             services.AddPersistenceRegistration();
+            services.AddHostedService<InitialSQLServerBackground>();
             services.AddGraphQLServer()
                 .AddQueryType<Query>()
+                .AddType<GeographyType>()
+                .AddType<ProvinceType>()
+                .AddType<AmphurType>()
                 .AddFiltering()
                 .AddSorting();
         }
@@ -36,10 +46,22 @@ namespace TH.POST.Address.SQLServer.GraphQL
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            var supportedCultures = new[] { "en-US", "th" };
+            var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseRouting();
 
