@@ -9,6 +9,7 @@ using TH.POST.Address.Persistence;
 using TH.POST.Address.Persistence.Background;
 using TH.POST.Address.SQLServer.GraphQL.Features;
 using TH.POST.Address.SQLServer.GraphQL.Features.Amphures;
+using TH.POST.Address.SQLServer.GraphQL.Features.Districts;
 using TH.POST.Address.SQLServer.GraphQL.Features.Geographies;
 using TH.POST.Address.SQLServer.GraphQL.Features.Provinces;
 
@@ -39,6 +40,7 @@ namespace TH.POST.Address.SQLServer.GraphQL
                 .AddType<GeographyType>()
                 .AddType<ProvinceType>()
                 .AddType<AmphurType>()
+                .AddType<DistrictType>()
                 .AddFiltering()
                 .AddSorting();
         }

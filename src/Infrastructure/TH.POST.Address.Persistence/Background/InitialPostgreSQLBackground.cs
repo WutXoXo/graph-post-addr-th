@@ -23,8 +23,11 @@ namespace TH.POST.Address.Persistence.Background
         {
             using (var scopeProvider = _serviceProvider.CreateScope())
             {
-                var context = scopeProvider.ServiceProvider.GetRequiredService<AppPostgreSQLContext>();
-                await context.Database.MigrateAsync();
+                var _contextFactory = scopeProvider.ServiceProvider.GetRequiredService<IDbContextFactory<AppPostgreSQLContext>>();
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    await context.Database.MigrateAsync();
+                }
             }
         }
 

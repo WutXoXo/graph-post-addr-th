@@ -8581,7 +8581,7 @@ namespace TH.POST.Address.Persistence
 
         public static void AddPostgreSQLContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppPostgreSQLContext>(options =>
+            services.AddPooledDbContextFactory<AppPostgreSQLContext>(options =>
             {
                 options.UseNpgsql(
                  configuration["ConnectionStrings:ApplicationConnection"],
@@ -8591,7 +8591,7 @@ namespace TH.POST.Address.Persistence
 
         public static void AddMySQLContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppMySQLContext>(options =>
+            services.AddPooledDbContextFactory<AppMySQLContext>(options =>
             {
                 options.UseMySQL(
                  configuration["ConnectionStrings:ApplicationConnection"],
@@ -8601,7 +8601,7 @@ namespace TH.POST.Address.Persistence
 
         public static void AddOracleDBContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppOracleDBContext>(options =>
+            services.AddPooledDbContextFactory<AppOracleDBContext>(options =>
             {
                 options.UseOracle(
                  configuration["ConnectionStrings:ApplicationConnection"],
